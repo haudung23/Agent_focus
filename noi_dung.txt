@@ -1,1 +1,82 @@
 
+=== 2026-04-20 ===
+
+Improving Factuality and Reasoning in Language Models through Multiagent Debate
+Authors: Yilun Du, Shuang Li, Antonio Torralba, Joshua B. Tenenbaum, Igor Mordatch
+Date: May 2023 (ICML 2024)
+URL: https://arxiv.org/abs/2305.14325
+Tom tat: Bài báo đề xuất phương pháp tranh luận đa tác nhân (multiagent debate), trong đó nhiều phiên bản mô hình ngôn ngữ lớn cùng đề xuất và tranh luận câu trả lời qua nhiều vòng để đạt được đồng thuận. Phương pháp này cải thiện đáng kể khả năng suy luận toán học và chiến lược, tăng tính chính xác thực tế và giảm thiểu ảo giác (hallucination) của mô hình. Đây là một trong những công trình nền tảng quan trọng nhất về tranh luận đa tác nhân với LLM.
+
+---
+
+Encouraging Divergent Thinking in Large Language Models through Multi-Agent Debate
+Authors: N/A
+Date: EMNLP 2024
+URL: https://aclanthology.org/2024.emnlp-main.992/
+Tom tat: Bài báo đề xuất khung MAD (Multi-Agent Debate) trong đó nhiều tác nhân tranh luận theo kiểu "tit for tat" với sự điều phối của một trọng tài (judge). Phương pháp khuyến khích tư duy phân kỳ để tránh hiện tượng hội tụ quá sớm và cải thiện chất lượng câu trả lời cuối cùng. Kết quả thực nghiệm cho thấy MAD vượt trội so với các phương pháp prompting đơn lẻ trên nhiều tác vụ suy luận.
+
+---
+
+Encouraging Divergent Thinking in Large Language Models through Multi-Agent Debate (arXiv preprint)
+Authors: N/A
+Date: May 2023
+URL: https://arxiv.org/abs/2305.19118
+Tom tat: Bản preprint trên arXiv của công trình đề xuất khung tranh luận đa tác nhân để khuyến khích tư duy phân kỳ trong LLM. Nhiều tác nhân được khuyến khích duy trì quan điểm khác biệt thay vì đồng thuận ngay, giúp khám phá không gian giải pháp rộng hơn. Phương pháp cho thấy kết quả vượt trội trong các tác vụ đòi hỏi suy luận đa chiều.
+
+---
+
+Should we be going MAD? A Look at Multi-Agent Debate Strategies for LLMs
+Authors: Andries Smit et al.
+Date: ICML 2024
+URL: https://proceedings.mlr.press/v235/smit24a.html
+Tom tat: Bài báo phân tích toàn diện liệu các chiến lược tranh luận đa tác nhân (MAD) có thực sự vượt trội so với các phương pháp prompting đơn giản hơn như self-consistency hay ensembling hay không. Kết quả cho thấy MAD không liên tục vượt trội các chiến lược tính toán đơn tác nhân, và phần lớn hiệu suất được quy cho bỏ phiếu đa số (majority voting). Nghiên cứu đặt ra câu hỏi quan trọng về giá trị thực sự của tranh luận trong cải thiện hiệu suất LLM.
+
+---
+
+Multi-LLM-Agents Debate - Performance, Efficiency, and Scaling Challenges
+Authors: N/A
+Date: April 2025 (ICLR Blogposts 2025)
+URL: https://d2jud02ci9yv69.cloudfront.net/2025-04-28-mad-159/blog/mad/
+Tom tat: Bài đăng blog tại ICLR 2025 xem xét hiệu suất, hiệu quả và thách thức mở rộng quy mô của các hệ thống tranh luận đa LLM. Nghiên cứu thông qua thực nghiệm trên bảy benchmark NLP cho thấy bỏ phiếu đa số (majority voting) chiếm phần lớn lợi ích hiệu suất thường được quy cho MAD. Bài viết chỉ ra rằng độ mạnh suy luận nội tại và đa dạng nhóm là yếu tố chủ đạo, trong khi các tham số cấu trúc như thứ tự hay khả năng hiển thị độ tin cậy ít ảnh hưởng hơn.
+
+---
+
+Adaptive heterogeneous multi-agent debate for enhanced educational and factual reasoning in large language models
+Authors: N/A
+Date: 2025 (Journal of King Saud University - Computer and Information Sciences)
+URL: https://link.springer.com/article/10.1007/s44443-025-00353-3
+Tom tat: Bài báo đề xuất khung A-HMAD (Adaptive Heterogeneous Multi-Agent Debate) kết hợp các tác nhân LLM đa dạng để cải thiện suy luận giáo dục và kiểm tra thực tế. A-HMAD đạt được mức tăng độ chính xác tuyệt đối 4–6% so với phương pháp tranh luận tiêu chuẩn trên sáu benchmark thách thức, đồng thời giảm lỗi thực tế hơn 30% trong các tác vụ sinh thông tin tiểu sử. Phương pháp thích ứng với ngữ cảnh giáo dục cho thấy tiềm năng lớn trong ứng dụng thực tế.
+
+---
+
+Can LLM Agents Really Debate? A Controlled Study of Multi-Agent Debate in Logical Reasoning
+Authors: N/A
+Date: November 2025
+URL: https://arxiv.org/abs/2511.07784
+Tom tat: Nghiên cứu có kiểm soát nhằm kiểm tra xem các tác nhân LLM có thực sự tham gia tranh luận suy luận có chủ đích hay chỉ đơn thuần là tổng hợp và bỏ phiếu đa số. Kết quả đặt câu hỏi liệu quá trình "tranh luận" hiện tại có vượt qua được ensembling đơn giản hay không. Bài báo cung cấp phân tích sâu về cơ chế thực sự đằng sau hiệu suất của các hệ thống MAD trong suy luận logic.
+
+---
+
+Multi-Agent Debate Strategies to Enhance Requirements Engineering with Large Language Models
+Authors: N/A
+Date: July 2025
+URL: https://arxiv.org/abs/2507.05981
+Tom tat: Bài báo áp dụng các chiến lược tranh luận đa tác nhân vào lĩnh vực kỹ thuật yêu cầu phần mềm (requirements engineering) với LLM. Nghiên cứu khám phá cách tranh luận có cấu trúc giữa các tác nhân có thể cải thiện chất lượng đặc tả yêu cầu và phát hiện các mâu thuẫn tiềm ẩn. Kết quả cho thấy MAD mang lại lợi ích đáng kể trong việc nâng cao độ chính xác và đầy đủ của tài liệu yêu cầu.
+
+---
+
+Debate or Vote: Which Yields Better Decisions in Multi-Agent Large Language Models?
+Authors: N/A
+Date: August 2025
+URL: https://arxiv.org/abs/2508.17536
+Tom tat: Bài báo so sánh hai cơ chế ra quyết định trong hệ thống đa tác nhân LLM: tranh luận (debate) và bỏ phiếu (voting). Nghiên cứu đánh giá hiệu quả của từng phương pháp trên nhiều loại tác vụ khác nhau và phân tích các điều kiện mà mỗi chiến lược có ưu thế. Kết quả cung cấp hướng dẫn thực tiễn cho việc thiết kế hệ thống đa tác nhân LLM hiệu quả.
+
+---
+
+When collaboration fails: persuasion driven adversarial influence in multi agent large language model debate
+Authors: N/A
+Date: 2026 (Scientific Reports)
+URL: https://www.nature.com/articles/s41598-026-42705-7
+Tom tat: Bài báo trên Scientific Reports chỉ ra rằng các hệ thống tranh luận đa LLM dễ bị tổn thương bởi ảnh hưởng đối nghịch dựa trên thuyết phục, khi một tác nhân đối nghịch được thiết kế chiến lược có thể làm giảm độ chính xác của hệ thống 10–40%. Tác nhân đối nghịch còn làm tăng sự đồng thuận về câu trả lời sai hơn 30%, phá hoại mục tiêu sửa lỗi và suy luận đa dạng của tranh luận. Phát hiện này làm nổi bật các lỗ hổng bảo mật nghiêm trọng trong thiết kế hệ thống MAD hiện tại.
+
+---
