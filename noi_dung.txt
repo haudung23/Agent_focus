@@ -80,3 +80,53 @@ URL: https://www.nature.com/articles/s41598-026-42705-7
 Tom tat: Bài báo trên Scientific Reports chỉ ra rằng các hệ thống tranh luận đa LLM dễ bị tổn thương bởi ảnh hưởng đối nghịch dựa trên thuyết phục, khi một tác nhân đối nghịch được thiết kế chiến lược có thể làm giảm độ chính xác của hệ thống 10–40%. Tác nhân đối nghịch còn làm tăng sự đồng thuận về câu trả lời sai hơn 30%, phá hoại mục tiêu sửa lỗi và suy luận đa dạng của tranh luận. Phát hiện này làm nổi bật các lỗ hổng bảo mật nghiêm trọng trong thiết kế hệ thống MAD hiện tại.
 
 ---
+
+=== 2026-04-21 ===
+
+Talk Isn't Always Cheap: Understanding Failure Modes in Multi-Agent Debate
+Authors: Wynn, Satija et al.
+Date: September 2025 (ICML 2025)
+URL: https://arxiv.org/abs/2509.05396
+Tom tat: Bài báo nghiên cứu các trường hợp thất bại của tranh luận đa tác nhân trong LLM, chỉ ra rằng tranh luận đôi khi có thể gây hại hơn là hữu ích.\n Kết quả thực nghiệm cho thấy độ chính xác của nhóm thường giảm qua các vòng tranh luận, ngay cả khi phần lớn tác nhân thực hiện tốt khi làm việc độc lập.\n Các tác nhân mạnh thường bị ảnh hưởng tiêu cực bởi các tác nhân yếu hơn, thay vì lan truyền kiến thức đúng đắn theo chiều ngược lại.\n Nghiên cứu cung cấp hiểu biết sâu sắc về cách sự khác biệt năng lực giữa các tác nhân ảnh hưởng đến kết quả tranh luận đa tác nhân.
+
+---
+
+iMAD: Intelligent Multi-Agent Debate for Efficient and Accurate LLM Inference
+Authors: N/A
+Date: November 2025
+URL: https://arxiv.org/abs/2511.11306
+Tom tat: iMAD đề xuất kích hoạt tranh luận đa tác nhân một cách thông minh, chỉ khi có khả năng mang lại lợi ích—tức là sửa những câu trả lời ban đầu sai.\n Hệ thống trích xuất 41 đặc trưng ngôn ngữ và ngữ nghĩa từ phản hồi tự phê bình, sau đó dùng bộ phân loại nhẹ với hàm mất mát FocusCal để quyết định có kích hoạt tranh luận hay không.\n Kết quả thực nghiệm trên 6 bộ dữ liệu hỏi đáp cho thấy iMAD giảm tới 92% lượng token sử dụng trong khi vẫn cải thiện độ chính xác lên tới 13,5%.\n Cách tiếp cận có chọn lọc này giải quyết hiệu quả vấn đề chi phí tính toán lớn của hệ thống MAD truyền thống.
+
+---
+
+Prepare Reasoning Language Models for Multi-Agent Debate with Self-Debate Reinforcement Learning
+Authors: N/A
+Date: January 2026
+URL: https://arxiv.org/abs/2601.22297
+Tom tat: Bài báo đề xuất Self-Debate Reinforcement Learning (SDRL), khung huấn luyện giúp LLM vừa giải quyết bài toán độc lập vừa có khả năng học từ các lập luận đa dạng trong tranh luận đa tác nhân.\n SDRL lấy mẫu nhiều lời giải, xây dựng ngữ cảnh tranh luận với các đường suy luận đa dạng, rồi tối ưu hóa đồng thời phản hồi ban đầu và phản hồi có điều kiện tranh luận.\n Thực nghiệm trên nhiều mô hình nền và benchmark suy luận cho thấy SDRL cải thiện hiệu suất MAD tổng thể đồng thời tăng cường khả năng suy luận đơn mô hình.\n Đây là công trình đầu tiên huấn luyện LLM chuyên biệt cho vai trò tham gia tranh luận đa tác nhân thay vì chỉ đào tạo giải quyết bài toán đơn lẻ.
+
+---
+
+Debating Truth: Debate-driven Claim Verification with Multiple Large Language Model Agents
+Authors: N/A
+Date: July 2025
+URL: https://arxiv.org/abs/2507.19090
+Tom tat: Bài báo đề xuất DebateCV, khung xác minh thông tin đầu tiên dựa trên tranh luận của nhiều tác nhân LLM, với hai tác nhân Debater tranh luận đối lập và một tác nhân Moderator phán xét.\n Hai tác nhân tranh luận từ hai phía đối lập qua nhiều vòng, trong khi Moderator đánh giá sức mạnh bằng chứng để đưa ra phán quyết cuối cùng có độ chính xác cao.\n Bài báo cũng đề xuất Debate-SFT, khung huấn luyện hậu kỳ dùng dữ liệu tổng hợp để cải thiện khả năng phân xét của Moderator tránh thiên kiến trung lập.\n Kết quả vượt trội so với các phương pháp đơn tác nhân về cả độ chính xác lẫn chất lượng lập luận.
+
+---
+
+Breaking Mental Set to Improve Reasoning through Diverse Multi-Agent Debate
+Authors: Liu, Cao, Li, He, Tan
+Date: ICLR 2025
+URL: https://openreview.net/forum?id=t6QHYUOQL7
+Tom tat: Bài báo ICLR 2025 đề xuất DMAD (Diverse Multi-Agent Debate) nhằm giải quyết vấn đề "mental set cố định" trong MAD, nơi các mô hình thường dùng cùng phương pháp suy luận dù có nhiều tác nhân.\n DMAD buộc mỗi tác nhân phải áp dụng phương pháp lập luận riêng biệt, giúp các tác nhân khai thác thông tin và góc nhìn đa dạng từ nhau để phá vỡ tư duy đơn chiều.\n Kết quả cho thấy DMAD vượt trội các phương pháp MAD truyền thống, đạt kết quả tốt hơn với ít vòng tranh luận hơn trên nhiều benchmark suy luận.
+
+---
+
+DEBATE: A Large-Scale Benchmark for Evaluating Opinion Dynamics in Role-Playing LLM Agents
+Authors: N/A
+Date: October 2025
+URL: https://arxiv.org/abs/2510.25110
+Tom tat: Bài báo giới thiệu DEBATE, một benchmark quy mô lớn để đánh giá tính xác thực của động lực ý kiến trong các mô phỏng tranh luận đa tác nhân của LLM.\n Benchmark chứa 30.707 tin nhắn từ 2.832 người tham gia Mỹ trong 708 nhóm và 107 chủ đề, cung cấp dữ liệu con người thực để so sánh với hành vi tranh luận của AI.\n Nghiên cứu cung cấp cơ sở đánh giá chuẩn để kiểm tra xem các tác nhân LLM nhập vai có thực sự mô phỏng chính xác động lực ý kiến của con người trong các cuộc tranh luận hay không.
+
+---
