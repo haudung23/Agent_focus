@@ -16,7 +16,13 @@ from pathlib import Path
 import anthropic
 import requests
 from bs4 import BeautifulSoup
-from duckduckgo_search import DDGS
+
+try:
+    from duckduckgo_search import DDGS
+    _DDGS_AVAILABLE = True
+except ImportError:
+    _DDGS_AVAILABLE = False
+    print("[WARN] duckduckgo_search not available — web_search will return empty results")
 
 # ── Paths ──────────────────────────────────────────────────────────────────
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -27,8 +33,18 @@ NOW_VN = datetime.now(VN_TZ)
 RUN_DATE = NOW_VN.strftime("%Y-%m-%d")
 RUN_DATE_HUMAN = NOW_VN.strftime("%d/%m/%Y")
 
-# ── Anthropic client ───────────────────────────────────────────────────────
-client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+# ── Pre-flight checks ──────────────────────────────────────────────────────
+_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "").strip()
+if not _API_KEY:
+    print("ERROR: ANTHROPIC_API_KEY is not set or empty.")
+    print("  → Go to: https://github.com/haudung23/Agent_focus/settings/secrets/actions")
+    print("  → Add secret: ANTHROPIC_API_KEY = <your key from console.anthropic.com>")
+    raise SystemExit(1)
+
+_prompt_file = REPO_ROOT / "prompts" / "daily_digest_prompt.md"
+if not _prompt_file.exists():
+    print(f"ERROR: Prompt file not found at {_prompt_file}")
+    raise SystemExit(1)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -37,6 +53,8 @@ client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 
 def tool_web_search(query: str, max_results: int = 10) -> str:
     """DuckDuckGo web search — no API key needed."""
+    if not _DDGS_AVAILABLE:
+        return "[web_search unavailable: duckduckgo_search not installed]"
     try:
         with DDGS() as ddgs:
             results = list(ddgs.text(query, max_results=max_results))
@@ -215,29 +233,25 @@ TOOL_HANDLERS = {
 
 
 # ═══════════════════════════════════════════════════════════════════════════
-# Prompt — read original, prepend resolved date variables
-# ═══════════════════════════════════════════════════════════════════════════
-
-_prompt_file = REPO_ROOT / "prompts" / "daily_digest_prompt.md"
-_original_prompt = _prompt_file.read_text(encoding="utf-8")
-
-PROMPT = f"""## CONTEXT FOR THIS RUN
-- RUN_DATE = {RUN_DATE}
-- RUN_DATE_HUMAN = {RUN_DATE_HUMAN}
-- Repo root: current working directory (all file paths are relative to it).
-- Do NOT run `git push` — the CI pipeline handles pushing after this script exits.
-
----
-
-{_original_prompt}"""
-
-
-# ═══════════════════════════════════════════════════════════════════════════
 # Agentic loop
 # ═══════════════════════════════════════════════════════════════════════════
 
 def run() -> None:
-    messages = [{"role": "user", "content": PROMPT}]
+    # Initialize client and prompt inside run() so pre-flight checks run first
+    client = anthropic.Anthropic(api_key=_API_KEY)
+
+    original_prompt = _prompt_file.read_text(encoding="utf-8")
+    prompt = (
+        f"## CONTEXT FOR THIS RUN\n"
+        f"- RUN_DATE = {RUN_DATE}\n"
+        f"- RUN_DATE_HUMAN = {RUN_DATE_HUMAN}\n"
+        f"- Repo root: current working directory (all file paths are relative to it).\n"
+        f"- Do NOT run `git push` — the CI pipeline handles pushing after this script exits.\n"
+        f"\n---\n\n"
+        f"{original_prompt}"
+    )
+
+    messages = [{"role": "user", "content": prompt}]
     print(f"[{RUN_DATE}] Starting daily digest run...")
 
     turn = 0
@@ -251,6 +265,7 @@ def run() -> None:
             tools=TOOLS,
             messages=messages,
         )
+        print(f"     stop_reason={response.stop_reason}, usage={response.usage}")
         messages.append({"role": "assistant", "content": response.content})
 
         if response.stop_reason == "end_turn":
