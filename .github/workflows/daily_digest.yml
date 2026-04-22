@@ -1,60 +1,65 @@
 name: Daily Research Digest — Multi-Agent Debate in LLMs
 
-# ── Triggers ────────────────────────────────────────────────────────────────
 on:
   schedule:
-    # 01:00 UTC  =  08:00 AM Vietnam (UTC+7)
-    - cron: '0 1 * * *'
-
-  # Manual trigger — dùng để test mà không cần chờ 8h sáng
+    - cron: '0 1 * * *'   # 08:00 AM Vietnam (UTC+7)
   workflow_dispatch:
 
-# ── Permissions ─────────────────────────────────────────────────────────────
-# "contents: write" cho phép workflow commit và push lại vào repo
 permissions:
   contents: write
 
-# ── Job ─────────────────────────────────────────────────────────────────────
 jobs:
   digest:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Kiểm tra ANTHROPIC_API_KEY trước khi làm bất cứ thứ gì
-      #    Nếu secret chưa được thêm vào repo, fail ngay với thông báo rõ ràng
-      - name: Check ANTHROPIC_API_KEY secret
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: |
-          if [ -z "$ANTHROPIC_API_KEY" ]; then
-            echo "::error::ANTHROPIC_API_KEY secret is not set!"
-            echo "::error::Go to: Settings → Secrets and variables → Actions → New repository secret"
-            echo "::error::Name: ANTHROPIC_API_KEY  |  Value: your key from console.anthropic.com"
-            exit 1
-          fi
-          echo "✓ ANTHROPIC_API_KEY is set (length=${#ANTHROPIC_API_KEY})"
-
-      # 2. Checkout repo — tự động cấu hình git credentials để push được
+      # ── 1. Checkout trước để các bước sau có code ──────────────────────────
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      # 3. Cài Python
+      # ── 2. Kiểm tra API key — in rõ trạng thái vào Step Summary ───────────
+      - name: Verify ANTHROPIC_API_KEY
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          KEY_LEN=${#ANTHROPIC_API_KEY}
+          echo "## API Key Status" >> $GITHUB_STEP_SUMMARY
+
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "❌ ANTHROPIC_API_KEY is EMPTY" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Fix:** Go to [Settings → Secrets → Actions](https://github.com/${{ github.repository }}/settings/secrets/actions)" >> $GITHUB_STEP_SUMMARY
+            echo "Add a secret named \`ANTHROPIC_API_KEY\` with value from https://console.anthropic.com/settings/keys" >> $GITHUB_STEP_SUMMARY
+            echo "::error title=Missing API Key::ANTHROPIC_API_KEY secret is empty. Add it at: github.com/${{ github.repository }}/settings/secrets/actions"
+            exit 1
+          fi
+
+          # Kiểm tra format cơ bản: Anthropic keys bắt đầu bằng "sk-ant-"
+          if [[ "$ANTHROPIC_API_KEY" != sk-ant-* ]]; then
+            echo "⚠️ Key length=${KEY_LEN} but does NOT start with 'sk-ant-'" >> $GITHUB_STEP_SUMMARY
+            echo "Key preview: \`${ANTHROPIC_API_KEY:0:10}...\`" >> $GITHUB_STEP_SUMMARY
+            echo "::warning::API key format unexpected (should start with sk-ant-). Check the value at console.anthropic.com"
+          else
+            echo "✅ ANTHROPIC_API_KEY is set (length=${KEY_LEN}, prefix=sk-ant-...)" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      # ── 3. Cài Python ───────────────────────────────────────────────────────
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      # 4. Cache pip packages — tránh download lại mỗi ngày
+      # ── 4. Cache pip ────────────────────────────────────────────────────────
       - name: Cache pip packages
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: pip-${{ hashFiles('**/requirements*.txt') }}-anthropic-bs4-ddgs
-          restore-keys: pip-
+          key: pip-v2-anthropic-requests-bs4-lxml-ddgs
+          restore-keys: pip-v2-
 
-      # 5. Cài dependencies
+      # ── 5. Cài dependencies ─────────────────────────────────────────────────
       - name: Install Python dependencies
         run: |
           pip install \
@@ -63,21 +68,23 @@ jobs:
             "beautifulsoup4>=4.12.0" \
             "lxml>=5.0.0" \
             "duckduckgo-search>=6.0.0,<8.0.0"
+          echo "Installed versions:"
+          pip show anthropic duckduckgo-search beautifulsoup4 lxml | grep -E "^(Name|Version):"
 
-      # 6. Chạy Claude agent — tạo file noi_dung_YYYY-MM-DD.md, cập nhật links.txt + README.md
+      # ── 6. Chạy agent ───────────────────────────────────────────────────────
       - name: Run daily digest agent
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python scripts/run_digest.py
 
-      # 7. Commit và push kết quả về repo
+      # ── 7. Commit và push ───────────────────────────────────────────────────
       - name: Commit and push results
         run: |
           git config user.email "agent@claude.ai"
           git config user.name "Claude Agent"
           git add -A
           if git diff --cached --quiet; then
-            echo "Nothing to commit — no new papers found today."
+            echo "Nothing to commit."
           else
             RUN_DATE=$(TZ='Asia/Ho_Chi_Minh' date +%Y-%m-%d)
             git commit -m "[AUTO] Digest ${RUN_DATE}: multi-agent debate in LLMs"
