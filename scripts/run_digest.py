@@ -56,8 +56,8 @@ def tool_web_search(query: str, max_results: int = 10) -> str:
     if not _DDGS_AVAILABLE:
         return "[web_search unavailable: duckduckgo_search not installed]"
     try:
-        with DDGS() as ddgs:
-            results = list(ddgs.text(query, max_results=max_results))
+        # Không dùng context manager — bị bỏ trong duckduckgo-search v7+
+        results = list(DDGS().text(query, max_results=max_results))
         if not results:
             return "[No results found]"
         lines = []
