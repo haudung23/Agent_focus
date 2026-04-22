@@ -1,0 +1,64 @@
+name: Daily Research Digest — Multi-Agent Debate in LLMs
+
+# ── Triggers ────────────────────────────────────────────────────────────────
+on:
+  schedule:
+    # 01:00 UTC  =  08:00 AM Vietnam (UTC+7)
+    - cron: '0 1 * * *'
+
+  # Manual trigger — dùng để test mà không cần chờ 8h sáng
+  workflow_dispatch:
+
+# ── Permissions ─────────────────────────────────────────────────────────────
+# "contents: write" cho phép workflow commit và push lại vào repo
+permissions:
+  contents: write
+
+# ── Job ─────────────────────────────────────────────────────────────────────
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout repo — tự động cấu hình git credentials để push được
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # 2. Cài Python
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # 3. Cài dependencies
+      - name: Install Python dependencies
+        run: |
+          pip install --quiet \
+            anthropic \
+            requests \
+            beautifulsoup4 \
+            duckduckgo-search
+
+      # 4. Chạy Claude agent — tạo file noi_dung_YYYY-MM-DD.md, cập nhật links.txt + README.md
+      - name: Run daily digest agent
+        env:
+          # Thêm secret này vào: repo → Settings → Secrets → Actions → New secret
+          # Tên: ANTHROPIC_API_KEY   Giá trị: sk-ant-...
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python scripts/run_digest.py
+
+      # 5. Commit và push kết quả về repo
+      - name: Commit and push results
+        run: |
+          git config user.email "agent@claude.ai"
+          git config user.name "Claude Agent"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Nothing to commit — no new papers found today."
+          else
+            RUN_DATE=$(TZ='Asia/Ho_Chi_Minh' date +%Y-%m-%d)
+            git commit -m "[AUTO] Digest ${RUN_DATE}: multi-agent debate in LLMs"
+            git push
+          fi
